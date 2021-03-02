@@ -1,0 +1,33 @@
+version: "3.3"
+
+services:
+  docker-mysql:
+    image: dtech-on.azurecr.io/servicenow/docker-mysql-nodb:${TAG}
+    container_name: docker-mysql-${POD_NAME}
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_USER: "servicenow"
+      MYSQL_PASSWORD: "changeit"
+      MYSQL_DATABASE: "sn_16001"
+    ports:
+      - 3306
+    networks:
+      - back-tier
+    volumes:
+      - /var/lib/mysql/${POD_NAME}:/var/lib/mysql
+  docker-snow:
+    image: dtech-on.azurecr.io/servicenow/docker-snow:${TAG}
+    container_name: docker-snow-${POD_NAME}
+    restart: always
+    ports:
+      - "${POD_PORT}:16001"
+    depends_on:
+      - "docker-mysql"
+    networks:
+      - back-tier
+    links:
+      - "docker-mysql"
+
+networks:
+    back-tier:

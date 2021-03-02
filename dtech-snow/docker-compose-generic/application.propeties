@@ -1,0 +1,6 @@
+# Application Metadata file
+app.name=docker-compose
+app.version=1.0.0
+app.build=3
+app.dependency=jakarta-snow:1.0.0:3
+
